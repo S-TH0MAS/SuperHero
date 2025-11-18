@@ -1,0 +1,23 @@
+/**
+ * Fichier principal SCSS
+ * Importe tous les composants SCSS modulaires
+ * Utilise la syntaxe moderne @use/@forward
+ */
+
+// Base - Variables doivent être chargées en premier
+@use 'base/variables' as *;
+@use 'base/base';
+
+// Layout
+@use 'layout/navbar';
+@use 'layout/container';
+@use 'layout/footer';
+@use 'layout/page-header';
+
+// Components
+@use 'components/cards';
+@use 'components/buttons';
+@use 'components/energy-bar';
+@use 'components/pagination';
+@use 'components/animations';
+

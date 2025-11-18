@@ -4,9 +4,9 @@
  */
 
 // ============================================
-// Imports CSS
+// Imports CSS/SCSS
 // ============================================
-import './styles/app.css';
+import './styles/app.scss';
 
 // ============================================
 // Imports de bibliothèques externes

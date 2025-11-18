@@ -1,0 +1,72 @@
+// Styles des cartes
+.card {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.card-header {
+    background: linear-gradient(90deg, var(--primary-color) 0%, #0d47a1 100%);
+    color: white;
+    font-weight: bold;
+    border: none;
+}
+
+.hero-card {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent
+        );
+        transform: rotate(45deg);
+        transition: all 0.5s;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    &:hover::before {
+        left: 100%;
+    }
+
+    .card-body,
+    .card-footer {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 180px;
+
+    i {
+        font-size: 2.5rem;
+        opacity: 0.8;
+    }
+}
+

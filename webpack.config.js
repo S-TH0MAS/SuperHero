@@ -54,7 +54,15 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader((options) => {
+        // Utiliser la nouvelle API moderne de Sass
+        // Note: sass-loader 14.x utilise automatiquement l'API moderne si disponible
+        // On peut supprimer les warnings de dépréciation
+        options.sassOptions = {
+            ...(options.sassOptions || {}),
+            silenceDeprecations: ['legacy-js-api']
+        };
+    })
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
