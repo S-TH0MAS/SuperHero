@@ -1,0 +1,191 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ mission.title }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="fas fa-clipboard-list"></i> {{ mission.title }}</h1>
+            <p class="mb-0">
+                <i class="fas fa-map-marker-alt"></i> {{ mission.location }}
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_mission_edit', {'id': mission.id}) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            <a href="{{ path('app_mission_index') }}" class="btn btn-light">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Informations</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th width="30%">Titre</th>
+                                <td>{{ mission.title }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>{{ mission.description|nl2br }}</td>
+                            </tr>
+                            <tr>
+                                <th>Statut</th>
+                                <td>
+                                    <span class="badge bg-{{ mission.statusBadgeClass }} fs-6">
+                                        {{ mission.statusLabel }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Lieu</th>
+                                <td>
+                                    <i class="fas fa-map-marker-alt"></i> {{ mission.location }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Niveau de danger</th>
+                                <td>
+                                    <span class="fs-4">{{ mission.dangerLevelStars }}</span>
+                                    <small class="text-muted ms-2">(Niveau {{ mission.dangerLevel }}/5)</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Date de début</th>
+                                <td>
+                                    <i class="fas fa-calendar"></i> {{ mission.startAt|date('d/m/Y à H:i') }}
+                                </td>
+                            </tr>
+                            {% if mission.endAt %}
+                                <tr>
+                                    <th>Date de fin</th>
+                                    <td>
+                                        <i class="fas fa-calendar-check"></i> {{ mission.endAt|date('d/m/Y à H:i') }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <th>Équipe assignée</th>
+                                <td>
+                                    {% if mission.assignedTeam %}
+                                        <a href="{{ path('app_team_show', {'id': mission.assignedTeam.id}) }}" class="text-decoration-none">
+                                            <i class="fas fa-users"></i> {{ mission.assignedTeam.name }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Aucune équipe assignée</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% if mission.requiredPowers|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-bolt"></i> Pouvoirs requis ({{ mission.requiredPowers|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for power in mission.requiredPowers %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <a href="{{ path('app_power_show', {'id': power.id}) }}" class="text-decoration-none">
+                                                    {{ power.name }}
+                                                </a>
+                                            </h6>
+                                            <p class="card-text small text-muted">{{ power.description }}</p>
+                                            <div>
+                                                <small class="text-muted">Niveau : {{ power.levelStars }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card mb-4">
+                    <div class="card-body text-center text-muted">
+                        <i class="fas fa-bolt fa-3x mb-3"></i>
+                        <p>Aucun pouvoir requis pour cette mission</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-{{ mission.statusBadgeClass }} text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Statut</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="badge bg-{{ mission.statusBadgeClass }} fs-5 p-3">
+                            {{ mission.statusLabel }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Niveau de danger</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="display-4 mb-2">{{ mission.dangerLevelStars }}</div>
+                    <p class="mb-0">Niveau {{ mission.dangerLevel }}/5</p>
+                </div>
+            </div>
+
+            {% if mission.assignedTeam %}
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-users"></i> Équipe assignée</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>
+                            <a href="{{ path('app_team_show', {'id': mission.assignedTeam.id}) }}" class="text-decoration-none">
+                                {{ mission.assignedTeam.name }}
+                            </a>
+                        </h6>
+                        <p class="mb-1">
+                            <small class="text-muted">
+                                <i class="fas fa-crown"></i> Leader: {{ mission.assignedTeam.leader.name }}
+                            </small>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">
+                                <i class="fas fa-users"></i> {{ mission.assignedTeam.membersCount }} membres
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Zone de danger</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">
+                        <strong>Attention :</strong> La suppression d'une mission est irréversible.
+                    </p>
+                    {{ include('mission/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,216 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ super_hero.name }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="fas fa-mask"></i> {{ super_hero.name }}</h1>
+            {% if super_hero.alterEgo %}
+                <p class="mb-0">
+                    <i class="fas fa-user-secret"></i> Identité secrète : {{ super_hero.alterEgo }}
+                </p>
+            {% endif %}
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('super_hero_edit', {'id': super_hero.id}) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            <a href="{{ path('super_hero_index') }}" class="btn btn-light">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if super_hero.imageName %}
+                    <img src="{{ asset('uploads/heroes/' ~ super_hero.imageName) }}" 
+                         class="card-img-top" 
+                         alt="{{ super_hero.name }}"
+                         style="height: 400px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center"
+                         style="height: 400px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-mask fa-5x text-white opacity-50"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body text-center">
+                    {% if super_hero.isAvailable %}
+                        <span class="badge bg-success fs-6 mb-2">
+                            <i class="fas fa-check-circle"></i> Disponible
+                        </span>
+                    {% else %}
+                        <span class="badge bg-danger fs-6 mb-2">
+                            <i class="fas fa-times-circle"></i> Indisponible
+                        </span>
+                    {% endif %}
+                    <div class="mt-3">
+                        <h5>Niveau d'énergie</h5>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar {% if super_hero.energyLevel < 40 %}bg-danger{% elseif super_hero.energyLevel < 70 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ super_hero.energyLevel }}%"
+                                 aria-valuenow="{{ super_hero.energyLevel }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ super_hero.energyLevel }}%
+                            </div>
+                        </div>
+                    </div>
+                    {% if super_hero.canBeLeader %}
+                        <div class="mt-3">
+                            <span class="badge bg-info">
+                                <i class="fas fa-crown"></i> Éligible comme leader
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Informations</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th width="30%">Nom</th>
+                                <td>{{ super_hero.name }}</td>
+                            </tr>
+                            {% if super_hero.alterEgo %}
+                                <tr>
+                                    <th>Identité secrète</th>
+                                    <td>{{ super_hero.alterEgo }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <th>Statut</th>
+                                <td>
+                                    {% if super_hero.isAvailable %}
+                                        <span class="badge bg-success">Disponible</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Indisponible</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Niveau d'énergie</th>
+                                <td>{{ super_hero.energyLevel }}%</td>
+                            </tr>
+                            <tr>
+                                <th>Date de création</th>
+                                <td>{{ super_hero.createdAt|date('d/m/Y à H:i') }}</td>
+                            </tr>
+                            {% if super_hero.biography %}
+                                <tr>
+                                    <th>Biographie</th>
+                                    <td>{{ super_hero.biography|nl2br }}</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% if super_hero.powers|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-bolt"></i> Pouvoirs ({{ super_hero.powers|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for power in super_hero.powers %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <a href="{{ path('app_power_show', {'id': power.id}) }}" class="text-decoration-none">
+                                                    {{ power.name }}
+                                                </a>
+                                            </h6>
+                                            <p class="card-text small text-muted">{{ power.description }}</p>
+                                            <div>
+                                                <small class="text-muted">Niveau : {{ power.levelStars }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card mb-4">
+                    <div class="card-body text-center text-muted">
+                        <i class="fas fa-bolt fa-3x mb-3"></i>
+                        <p>Aucun pouvoir assigné</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if super_hero.teams|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-users"></i> Équipes ({{ super_hero.teams|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for team in super_hero.teams %}
+                                <a href="{{ path('app_team_show', {'id': team.id}) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">{{ team.name }}</h6>
+                                            {% if team.leader.id == super_hero.id %}
+                                                <small class="text-muted">
+                                                    <i class="fas fa-crown"></i> Leader de l'équipe
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                        {% if team.isActive %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if super_hero.ledTeams|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-crown"></i> Équipes dirigées ({{ super_hero.ledTeams|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for team in super_hero.ledTeams %}
+                                <a href="{{ path('app_team_show', {'id': team.id}) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">{{ team.name }}</h6>
+                                            <small class="text-muted">{{ team.members|length }} membres</small>
+                                        </div>
+                                        {% if team.isActive %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

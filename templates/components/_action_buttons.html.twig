@@ -1,0 +1,34 @@
+{# 
+    Composant de boutons d'action réutilisable
+    
+    Paramètres:
+    - show_url: URL pour le bouton "Voir" (optionnel)
+    - edit_url: URL pour le bouton "Modifier" (optionnel)
+    - delete_url: URL pour le bouton "Supprimer" (optionnel)
+    - show_label: Label pour le bouton Voir (défaut: "Voir")
+    - edit_label: Label pour le bouton Modifier (défaut: "Modifier")
+    - size: Taille des boutons (défaut: "btn-sm")
+    - class: Classes supplémentaires pour le conteneur
+#}
+<div class="d-flex gap-2 {{ class|default('') }}">
+    {% if show_url is defined and show_url %}
+        <a href="{{ show_url }}"
+           class="btn {{ size|default('btn-sm') }} btn-outline-primary flex-fill">
+            <i class="fas fa-eye"></i> {{ show_label|default('Voir') }}
+        </a>
+    {% endif %}
+    {% if edit_url is defined and edit_url %}
+        <a href="{{ edit_url }}"
+           class="btn {{ size|default('btn-sm') }} btn-outline-warning flex-fill">
+            <i class="fas fa-edit"></i> {{ edit_label|default('Modifier') }}
+        </a>
+    {% endif %}
+    {% if delete_url is defined and delete_url %}
+        <a href="{{ delete_url }}"
+           class="btn {{ size|default('btn-sm') }} btn-outline-danger flex-fill"
+           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+            <i class="fas fa-trash"></i> {{ delete_label|default('Supprimer') }}
+        </a>
+    {% endif %}
+</div>
+

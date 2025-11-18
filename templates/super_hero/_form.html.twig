@@ -1,0 +1,56 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true, 'enctype': 'multipart/form-data'}}) }}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.name, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.alterEgo, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="form-check form-switch mb-3">
+                {{ form_widget(form.isAvailable, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(form.isAvailable, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.energyLevel, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_row(form.biography, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_row(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+        {% if super_hero is defined and super_hero.imageName %}
+            <div class="mt-2">
+                <small class="text-muted">Image actuelle :</small>
+                <img src="{{ asset('uploads/heroes/' ~ super_hero.imageName) }}" 
+                     alt="{{ super_hero.name }}" 
+                     class="img-thumbnail mt-2" 
+                     style="max-height: 150px;">
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_row(form.powers, {'attr': {'class': 'form-select'}}) }}
+        <small class="form-text text-muted">
+            <i class="fas fa-info-circle"></i> Maintenez Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs pouvoirs
+        </small>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> {{ button_label|default('Enregistrer') }}
+        </button>
+        <a href="{{ path('super_hero_index') }}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Annuler
+        </a>
+    </div>
+{{ form_end(form) }}
+

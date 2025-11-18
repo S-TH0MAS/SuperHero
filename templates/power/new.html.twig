@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Pouvoir - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ include('components/_page_header.html.twig', {
+        'title': 'Créer un nouveau Pouvoir',
+        'subtitle': 'Ajoutez un nouveau pouvoir à votre base de données',
+        'icon': 'fas fa-bolt',
+        'actions': [{'url': path('app_power_index'), 'label': 'Retour à la liste', 'icon': 'fas fa-arrow-left', 'class': 'btn-light'}]
+    }) }}
+
+    <div class="card">
+        <div class="card-body">
+            {{ include('power/_form.html.twig', {'button_label': 'Créer le pouvoir'}) }}
+        </div>
+    </div>
+{% endblock %}

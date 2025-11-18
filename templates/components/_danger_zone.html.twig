@@ -1,0 +1,25 @@
+{# 
+    Composant de zone de danger réutilisable pour les suppressions
+    
+    Paramètres:
+    - title: Titre de la zone (défaut: "Zone de danger")
+    - message: Message d'avertissement
+    - delete_form: Chemin vers le template du formulaire de suppression
+    - delete_form_vars: Variables à passer au formulaire de suppression
+#}
+<div class="card border-danger">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-exclamation-triangle"></i> {{ title|default('Zone de danger') }}
+        </h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted">
+            <strong>Attention :</strong> {{ message|default('La suppression est irréversible. Toutes les données associées seront également supprimées.') }}
+        </p>
+        {% if delete_form is defined and delete_form %}
+            {{ include(delete_form, delete_form_vars|default({})) }}
+        {% endif %}
+    </div>
+</div>
+

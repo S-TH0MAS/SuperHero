@@ -1,0 +1,205 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ team.name }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="fas fa-users"></i> {{ team.name }}</h1>
+            <p class="mb-0">Détails de l'équipe</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_team_edit', {'id': team.id}) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            <a href="{{ path('app_team_index') }}" class="btn btn-light">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Informations</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th width="30%">Nom</th>
+                                <td>{{ team.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Statut</th>
+                                <td>
+                                    {% if team.isActive %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Disponibilité</th>
+                                <td>
+                                    {% if team.isAvailable %}
+                                        <span class="badge bg-success">Disponible</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">En mission</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Date de création</th>
+                                <td>{{ team.createdAt|date('d/m/Y à H:i') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Leader</th>
+                                <td>
+                                    {% if team.leader %}
+                                        <a href="{{ path('super_hero_show', {'id': team.leader.id}) }}" class="text-decoration-none">
+                                            <i class="fas fa-crown"></i> {{ team.leader.name }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Aucun leader assigné</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Nombre de membres</th>
+                                <td>{{ team.membersCount }} membres</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% if team.members|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-mask"></i> Membres de l'équipe ({{ team.members|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for member in team.members %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <a href="{{ path('super_hero_show', {'id': member.id}) }}" class="text-decoration-none">
+                                                    {% if member.id == team.leader.id %}
+                                                        <i class="fas fa-crown text-warning"></i>
+                                                    {% endif %}
+                                                    {{ member.name }}
+                                                </a>
+                                            </h6>
+                                            {% if member.alterEgo %}
+                                                <p class="card-text small text-muted mb-2">{{ member.alterEgo }}</p>
+                                            {% endif %}
+                                            <div>
+                                                {% if member.isAvailable %}
+                                                    <span class="badge bg-success">Disponible</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Indisponible</span>
+                                                {% endif %}
+                                                <small class="text-muted ms-2">Énergie: {{ member.energyLevel }}%</small>
+                                            </div>
+                                            {% if member.powers|length > 0 %}
+                                                <div class="mt-2">
+                                                    <small class="text-muted">Pouvoirs:</small>
+                                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                                        {% for power in member.powers|slice(0, 3) %}
+                                                            <span class="badge bg-info text-dark">{{ power.name }}</span>
+                                                        {% endfor %}
+                                                        {% if member.powers|length > 3 %}
+                                                            <span class="badge bg-secondary">+{{ member.powers|length - 3 }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if team.missions|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-clipboard-list"></i> Missions assignées ({{ team.missions|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for mission in team.missions %}
+                                <a href="{{ path('app_mission_show', {'id': mission.id}) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">{{ mission.title }}</h6>
+                                            <small class="text-muted">
+                                                <i class="fas fa-map-marker-alt"></i> {{ mission.location }}
+                                            </small>
+                                            <br>
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar"></i> {{ mission.startAt|date('d/m/Y H:i') }}
+                                            </small>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge bg-{{ mission.statusBadgeClass }}">
+                                                {{ mission.statusLabel }}
+                                            </span>
+                                            <br>
+                                            <small class="text-muted">
+                                                {{ mission.dangerLevelStars }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-users"></i> Statistiques</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="display-4 mb-2">{{ team.membersCount }}</div>
+                    <p class="mb-0">Membres</p>
+                    <hr>
+                    <div class="mt-3">
+                        {% if team.isAvailable %}
+                            <span class="badge bg-success fs-6">
+                                <i class="fas fa-check-circle"></i> Disponible
+                            </span>
+                        {% else %}
+                            <span class="badge bg-warning fs-6">
+                                <i class="fas fa-clock"></i> En mission
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Zone de danger</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">
+                        <strong>Attention :</strong> La suppression d'une équipe est irréversible.
+                    </p>
+                    {{ include('team/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

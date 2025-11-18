@@ -1,0 +1,19 @@
+<div class="card border-danger">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Zone de danger</h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted">
+            <strong>Attention :</strong> La suppression d'un super-héros est irréversible. 
+            Toutes les données associées seront également supprimées.
+        </p>
+        <form method="post" action="{{ path('super_hero_delete', {'id': super_hero.id}) }}" 
+              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce super-héros ? Cette action est irréversible.');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ super_hero.id) }}">
+            <button class="btn btn-danger">
+                <i class="fas fa-trash"></i> Supprimer ce super-héros
+            </button>
+        </form>
+    </div>
+</div>
+

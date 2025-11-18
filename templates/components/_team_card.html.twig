@@ -1,0 +1,66 @@
+{# 
+    Composant de carte d'équipe réutilisable
+    
+    Paramètres:
+    - team: Objet Team
+    - show_actions: Afficher les boutons d'action (défaut: true)
+#}
+<div class="col">
+    <div class="card hero-card h-100">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-users"></i> {{ team.name }}
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {% if team.isActive %}
+                    <span class="badge bg-success">
+                        <i class="fas fa-check-circle"></i> Active
+                    </span>
+                {% else %}
+                    <span class="badge bg-secondary">
+                        <i class="fas fa-times-circle"></i> Inactive
+                    </span>
+                {% endif %}
+                {% if team.isAvailable %}
+                    <span class="badge bg-info ms-2">
+                        <i class="fas fa-clock"></i> Disponible
+                    </span>
+                {% else %}
+                    <span class="badge bg-warning ms-2">
+                        <i class="fas fa-exclamation-triangle"></i> En mission
+                    </span>
+                {% endif %}
+            </div>
+            {% if team.leader %}
+                <p class="mb-2">
+                    <i class="fas fa-crown text-warning"></i> 
+                    <strong>Leader:</strong> 
+                    <a href="{{ path('super_hero_show', {'id': team.leader.id}) }}" class="text-decoration-none">
+                        {{ team.leader.name }}
+                    </a>
+                </p>
+            {% endif %}
+            <p class="mb-0">
+                <i class="fas fa-users"></i> 
+                <strong>{{ team.membersCount }}</strong> membre{{ team.membersCount > 1 ? 's' : '' }}
+            </p>
+            {% if team.missions|length > 0 %}
+                <p class="mb-0 mt-2">
+                    <i class="fas fa-clipboard-list"></i> 
+                    <strong>{{ team.missions|length }}</strong> mission{{ team.missions|length > 1 ? 's' : '' }}
+                </p>
+            {% endif %}
+        </div>
+        {% if show_actions|default(true) %}
+            <div class="card-footer bg-transparent">
+                {{ include('components/_action_buttons.html.twig', {
+                    'show_url': path('app_team_show', {'id': team.id}),
+                    'edit_url': path('app_team_edit', {'id': team.id})
+                }) }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+

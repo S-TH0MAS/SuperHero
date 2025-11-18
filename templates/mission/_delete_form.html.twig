@@ -1,0 +1,7 @@
+<form method="post" action="{{ path('app_mission_delete', {'id': mission.id}) }}" 
+      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ? Cette action est irréversible.');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
+    <button class="btn btn-danger btn-sm">
+        <i class="fas fa-trash"></i> Supprimer
+    </button>
+</form>

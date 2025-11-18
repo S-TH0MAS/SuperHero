@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ mission.title }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ include('components/_page_header.html.twig', {
+        'title': 'Modifier ' ~ mission.title,
+        'subtitle': 'Modifiez les informations de cette mission',
+        'icon': 'fas fa-edit',
+        'actions': [
+            {'url': path('app_mission_show', {'id': mission.id}), 'label': 'Voir', 'icon': 'fas fa-eye', 'class': 'btn-light'},
+            {'url': path('app_mission_index'), 'label': 'Retour à la liste', 'icon': 'fas fa-arrow-left', 'class': 'btn-light'}
+        ]
+    }) }}
+
+    <div class="card">
+        <div class="card-body">
+            {{ include('mission/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        {{ include('components/_danger_zone.html.twig', {
+            'message': 'La suppression d\'une mission est irréversible.',
+            'delete_form': 'mission/_delete_form.html.twig',
+            'delete_form_vars': {'mission': mission}
+        }) }}
+    </div>
+{% endblock %}

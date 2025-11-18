@@ -1,0 +1,31 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            {{ form_row(form.name) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            {{ form_row(form.description) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.level) }}
+            <small class="form-text text-muted">
+                <i class="fas fa-info-circle"></i> Le niveau détermine la puissance du pouvoir (1 = faible, 5 = extrême)
+            </small>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> {{ button_label|default('Enregistrer') }}
+        </button>
+        <a href="{{ path('app_power_index') }}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Annuler
+        </a>
+    </div>
+{{ form_end(form) }}

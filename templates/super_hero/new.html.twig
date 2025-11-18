@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Super-Héros - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ include('components/_page_header.html.twig', {
+        'title': 'Créer un nouveau Super-Héros',
+        'subtitle': 'Ajoutez un nouvel agent surhumain à votre base de données',
+        'icon': 'fas fa-plus-circle',
+        'actions': [{'url': path('super_hero_index'), 'label': 'Retour à la liste', 'icon': 'fas fa-arrow-left', 'class': 'btn-light'}]
+    }) }}
+
+    <div class="card">
+        <div class="card-body">
+            {{ include('super_hero/_form.html.twig', {'button_label': 'Créer le héros'}) }}
+        </div>
+    </div>
+{% endblock %}

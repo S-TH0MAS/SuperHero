@@ -1,0 +1,90 @@
+{# 
+    Composant de carte de super-héros réutilisable
+    
+    Paramètres:
+    - hero: Objet SuperHero
+    - show_actions: Afficher les boutons d'action (défaut: true)
+#}
+<div class="col">
+    <div class="card hero-card h-100">
+        {% if hero.imageName %}
+            {# Détecter si c'est une URL externe ou un fichier uploadé #}
+            {% set isExternalUrl = hero.imageName|slice(0, 7) == 'http://' or hero.imageName|slice(0, 8) == 'https://' %}
+            {% set imageUrl = isExternalUrl 
+                ? hero.imageName 
+                : asset('uploads/heroes/' ~ hero.imageName) %}
+            <img src="{{ imageUrl }}"
+                 class="card-img-top" 
+                 alt="{{ hero.name }}"
+                 loading="lazy"
+                 style="height: 250px; object-fit: cover;">
+        {% else %}
+            <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center"
+                 style="height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <i class="fas fa-mask fa-5x text-white opacity-50"></i>
+            </div>
+        {% endif %}
+
+        <div class="card-body">
+            <h5 class="card-title">
+                <a href="{{ path('super_hero_show', {'id': hero.id}) }}" class="text-decoration-none">
+                    {{ hero.name }}
+                </a>
+            </h5>
+
+            {% if hero.alterEgo %}
+                <p class="text-muted small mb-2">
+                    <i class="fas fa-user-secret"></i> {{ hero.alterEgo }}
+                </p>
+            {% endif %}
+
+            <div class="mb-2">
+                {% if hero.isAvailable %}
+                    <span class="badge bg-success">
+                        <i class="fas fa-check-circle"></i> Disponible
+                    </span>
+                {% else %}
+                    <span class="badge bg-danger">
+                        <i class="fas fa-times-circle"></i> Indisponible
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <small class="text-muted">Énergie: {{ hero.energyLevel }}%</small>
+                <div class="energy-bar">
+                    <div class="energy-fill {% if hero.energyLevel < 40 %}low{% elseif hero.energyLevel < 70 %}medium{% endif %}"
+                         style="width: {{ hero.energyLevel }}%"></div>
+                </div>
+            </div>
+
+            {% if hero.powers|length > 0 %}
+                <div class="mb-2">
+                    <small class="text-muted">Pouvoirs:</small>
+                    <div class="d-flex flex-wrap gap-1 mt-1">
+                        {% for power in hero.powers|slice(0, 3) %}
+                            <span class="badge bg-info text-dark">
+                                {{ power.name }}
+                            </span>
+                        {% endfor %}
+                        {% if hero.powers|length > 3 %}
+                            <span class="badge bg-secondary">
+                                +{{ hero.powers|length - 3 }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if show_actions|default(true) %}
+            <div class="card-footer bg-transparent">
+                {{ include('components/_action_buttons.html.twig', {
+                    'show_url': path('super_hero_show', {'id': hero.id}),
+                    'edit_url': path('super_hero_edit', {'id': hero.id})
+                }) }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+

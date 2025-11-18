@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Héros - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ include('components/_page_header.html.twig', {
+        'title': 'Super-Héros',
+        'subtitle': 'Gestion des agents surhumains de S.H.I.E.L.D',
+        'icon': 'fas fa-mask',
+        'actions': [{
+            'url': path('super_hero_new'),
+            'label': 'Nouveau Héros',
+            'icon': 'fas fa-plus-circle',
+            'class': 'btn-light',
+            'size': 'btn-lg'
+        }]
+    }) }}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="availability" class="form-label">Disponibilité</label>
+                    <select name="availability" id="availability" class="form-select">
+                        <option value="">Tous</option>
+                        <option value="1" {% if current_availability == '1' %}selected{% endif %}>Disponibles</option>
+                        <option value="0" {% if current_availability == '0' %}selected{% endif %}>Indisponibles</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="energy_min" class="form-label">Énergie minimale</label>
+                    <input type="number" name="energy_min" id="energy_min" class="form-control"
+                           min="0" max="100" value="{{ current_energy_min }}" placeholder="0-100">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-search"></i> Filtrer
+                    </button>
+                    <a href="{{ path('super_hero_index') }}" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Réinitialiser
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if pagination.items is empty %}
+        {{ include('components/_empty_state.html.twig', {
+            'icon': 'fas fa-info-circle',
+            'title': 'Aucun héros trouvé',
+            'message': 'Commencez par ajouter votre premier super-héros !',
+            'action_url': path('super_hero_new'),
+            'action_label': 'Ajouter un Héros',
+            'action_icon': 'fas fa-plus-circle'
+        }) }}
+    {% else %}
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for hero in pagination.items %}
+                {{ include('components/_hero_card.html.twig', {'hero': hero}) }}
+            {% endfor %}
+        </div>
+
+        <div class="mt-4 d-flex justify-content-center">
+            <div class="pagination-wrapper">
+                {{ knp_pagination_render(pagination, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

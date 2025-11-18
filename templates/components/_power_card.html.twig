@@ -1,0 +1,31 @@
+{# 
+    Composant de carte de pouvoir réutilisable
+    
+    Paramètres:
+    - power: Objet Power
+    - show_actions: Afficher les boutons d'action (défaut: true)
+#}
+<div class="col">
+    <div class="card hero-card h-100">
+        <div class="card-header bg-info text-white text-center">
+            <i class="fas fa-bolt fa-3x mb-2"></i>
+            <h5 class="mb-0">{{ power.name }}</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ power.description|slice(0, 100) }}{% if power.description|length > 100 %}...{% endif %}</p>
+            <div class="mb-3">
+                <small class="text-muted">Niveau :</small>
+                <div class="fs-4">{{ power.levelStars }}</div>
+            </div>
+        </div>
+        {% if show_actions|default(true) %}
+            <div class="card-footer bg-transparent">
+                {{ include('components/_action_buttons.html.twig', {
+                    'show_url': path('app_power_show', {'id': power.id}),
+                    'edit_url': path('app_power_edit', {'id': power.id})
+                }) }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+

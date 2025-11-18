@@ -1,0 +1,180 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ include('components/_page_header.html.twig', {
+        'title': 'Tableau de bord S.H.I.E.L.D 2.0',
+        'subtitle': 'Vue d\'ensemble de vos opérations',
+        'icon': 'fas fa-shield-alt'
+    }) }}
+
+    {# Statistiques générales #}
+    <div class="row mb-4">
+        <div class="col-md-3 d-flex">
+            <div class="stat-card text-center w-100">
+                <i class="fas fa-mask"></i>
+                <h3>{{ stats.totalHeroes }}</h3>
+                <p class="mb-0">Super-Héros</p>
+                <small>{{ stats.availableHeroes }} disponibles</small>
+            </div>
+        </div>
+        <div class="col-md-3 d-flex">
+            <div class="stat-card text-center w-100">
+                <i class="fas fa-users"></i>
+                <h3>{{ stats.totalTeams }}</h3>
+                <p class="mb-0">Équipes</p>
+                <small>{{ stats.activeTeams }} actives</small>
+            </div>
+        </div>
+        <div class="col-md-3 d-flex">
+            <div class="stat-card text-center w-100">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>{{ stats.pendingMissions + stats.inProgressMissions }}</h3>
+                <p class="mb-0">Missions actives</p>
+                <small>{{ stats.pendingMissions }} en attente, {{ stats.inProgressMissions }} en cours</small>
+            </div>
+        </div>
+        <div class="col-md-3 d-flex">
+            <div class="stat-card text-center w-100">
+                <i class="fas fa-check-circle"></i>
+                <h3>{{ stats.completedMissions }}</h3>
+                <p class="mb-0">Missions terminées</p>
+                <small>&nbsp;</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {# Héros récents #}
+        <div class="col-md-6 mb-4 d-flex">
+            <div class="card w-100 d-flex flex-column">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-mask"></i> Héros récents
+                    </h5>
+                </div>
+                <div class="card-body flex-grow-1 d-flex flex-column">
+                    {% if recentHeroes is empty %}
+                        <p class="text-muted text-center">Aucun héros enregistré</p>
+                    {% else %}
+                        <div class="list-group flex-grow-1">
+                            {% for hero in recentHeroes %}
+                                <a href="{{ path('super_hero_show', {'id': hero.id}) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">{{ hero.name }}</h6>
+                                            {% if hero.alterEgo %}
+                                                <small class="text-muted">{{ hero.alterEgo }}</small>
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-end">
+                                            {% if hero.isAvailable %}
+                                                <span class="badge bg-success">Disponible</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Indisponible</span>
+                                            {% endif %}
+                                            <br>
+                                            <small class="text-muted">Énergie: {{ hero.energyLevel }}%</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a href="{{ path('super_hero_index') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-list"></i> Voir tous les héros
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Missions récentes #}
+        <div class="col-md-6 mb-4 d-flex">
+            <div class="card w-100 d-flex flex-column">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clipboard-list"></i> Missions récentes
+                    </h5>
+                </div>
+                <div class="card-body flex-grow-1 d-flex flex-column">
+                    {% if recentMissions is empty %}
+                        <p class="text-muted text-center">Aucune mission enregistrée</p>
+                    {% else %}
+                        <div class="list-group flex-grow-1">
+                            {% for mission in recentMissions %}
+                                <a href="{{ path('app_mission_show', {'id': mission.id}) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">{{ mission.title }}</h6>
+                                            <small class="text-muted">
+                                                <i class="fas fa-map-marker-alt"></i> {{ mission.location }}
+                                            </small>
+                                            <br>
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar"></i> {{ mission.startAt|date('d/m/Y H:i') }}
+                                            </small>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge bg-{{ mission.statusBadgeClass }}">
+                                                {{ mission.statusLabel }}
+                                            </span>
+                                            <br>
+                                            <small class="text-muted">
+                                                {{ mission.dangerLevelStars }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a href="{{ path('app_mission_index') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-list"></i> Voir toutes les missions
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Actions rapides #}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-bolt"></i> Actions rapides
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <a href="{{ path('super_hero_new') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-plus-circle"></i><br>
+                        Nouveau Héros
+                    </a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="{{ path('app_team_new') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-users"></i><br>
+                        Nouvelle Équipe
+                    </a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="{{ path('app_mission_new') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-clipboard-list"></i><br>
+                        Nouvelle Mission
+                    </a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="{{ path('app_power_new') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-bolt"></i><br>
+                        Nouveau Pouvoir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

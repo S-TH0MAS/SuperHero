@@ -1,0 +1,36 @@
+{# 
+    Composant d'en-tête de page réutilisable
+    
+    Paramètres:
+    - title: Titre de la page
+    - subtitle: Sous-titre (optionnel)
+    - icon: Icône Font Awesome (optionnel)
+    - actions: Tableau d'actions à afficher à droite (optionnel)
+        Exemple: [{'url': path('...'), 'label': 'Nouveau', 'icon': 'fa-plus', 'class': 'btn-primary'}]
+#}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1>
+            {% if icon is defined and icon %}
+                <i class="{{ icon }}"></i>
+            {% endif %}
+            {{ title }}
+        </h1>
+        {% if subtitle is defined and subtitle %}
+            <p class="mb-0">{{ subtitle }}</p>
+        {% endif %}
+    </div>
+    {% if actions is defined and actions %}
+        <div class="d-flex gap-2">
+            {% for action in actions %}
+                <a href="{{ action.url }}" class="btn {{ action.class|default('btn-light') }} {{ action.size|default('') }}">
+                    {% if action.icon is defined and action.icon %}
+                        <i class="{{ action.icon }}"></i>
+                    {% endif %}
+                    {{ action.label }}
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+

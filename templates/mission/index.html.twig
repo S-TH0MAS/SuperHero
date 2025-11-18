@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Missions - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ include('components/_page_header.html.twig', {
+        'title': 'Missions',
+        'subtitle': 'Gestion des missions de S.H.I.E.L.D',
+        'icon': 'fas fa-clipboard-list',
+        'actions': [{
+            'url': path('app_mission_new'),
+            'label': 'Nouvelle Mission',
+            'icon': 'fas fa-plus-circle',
+            'class': 'btn-light',
+            'size': 'btn-lg'
+        }]
+    }) }}
+
+    {% if missions is empty %}
+        {{ include('components/_empty_state.html.twig', {
+            'icon': 'fas fa-clipboard-list',
+            'title': 'Aucune mission trouvée',
+            'message': 'Commencez par créer votre première mission !',
+            'action_url': path('app_mission_new'),
+            'action_label': 'Créer une Mission',
+            'action_icon': 'fas fa-plus-circle'
+        }) }}
+    {% else %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for mission in missions %}
+                {{ include('components/_mission_card.html.twig', {'mission': mission}) }}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

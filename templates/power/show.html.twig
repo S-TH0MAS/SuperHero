@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ power.name }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="fas fa-bolt"></i> {{ power.name }}</h1>
+            <p class="mb-0">Détails du pouvoir</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_power_edit', {'id': power.id}) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            <a href="{{ path('app_power_index') }}" class="btn btn-light">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Informations</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th width="30%">Nom</th>
+                                <td>{{ power.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>{{ power.description|nl2br }}</td>
+                            </tr>
+                            <tr>
+                                <th>Niveau</th>
+                                <td>
+                                    <span class="badge bg-info fs-6">{{ power.levelStars }}</span>
+                                    <small class="text-muted ms-2">(Niveau {{ power.level }}/5)</small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% if power.superHeroes|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-mask"></i> Super-Héros possédant ce pouvoir ({{ power.superHeroes|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for hero in power.superHeroes %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <a href="{{ path('super_hero_show', {'id': hero.id}) }}" class="text-decoration-none">
+                                                    {{ hero.name }}
+                                                </a>
+                                            </h6>
+                                            {% if hero.alterEgo %}
+                                                <p class="card-text small text-muted mb-2">{{ hero.alterEgo }}</p>
+                                            {% endif %}
+                                            <div>
+                                                {% if hero.isAvailable %}
+                                                    <span class="badge bg-success">Disponible</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Indisponible</span>
+                                                {% endif %}
+                                                <small class="text-muted ms-2">Énergie: {{ hero.energyLevel }}%</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card mb-4">
+                    <div class="card-body text-center text-muted">
+                        <i class="fas fa-mask fa-3x mb-3"></i>
+                        <p>Aucun super-héros ne possède ce pouvoir actuellement</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if power.missions|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-clipboard-list"></i> Missions nécessitant ce pouvoir ({{ power.missions|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for mission in power.missions %}
+                                <a href="{{ path('app_mission_show', {'id': mission.id}) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">{{ mission.title }}</h6>
+                                            <small class="text-muted">
+                                                <i class="fas fa-map-marker-alt"></i> {{ mission.location }}
+                                            </small>
+                                            <br>
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar"></i> {{ mission.startAt|date('d/m/Y H:i') }}
+                                            </small>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge bg-{{ mission.statusBadgeClass }}">
+                                                {{ mission.statusLabel }}
+                                            </span>
+                                            <br>
+                                            <small class="text-muted">
+                                                {{ mission.dangerLevelStars }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Niveau du pouvoir</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="display-1 mb-3">{{ power.levelStars }}</div>
+                    <p class="mb-0">Niveau {{ power.level }} sur 5</p>
+                </div>
+            </div>
+
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Zone de danger</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">
+                        <strong>Attention :</strong> La suppression d'un pouvoir est irréversible.
+                    </p>
+                    {{ include('power/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

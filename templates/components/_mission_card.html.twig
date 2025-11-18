@@ -1,0 +1,56 @@
+{# 
+    Composant de carte de mission réutilisable
+    
+    Paramètres:
+    - mission: Objet Mission
+    - show_actions: Afficher les boutons d'action (défaut: true)
+#}
+<div class="col">
+    <div class="card hero-card h-100">
+        <div class="card-header bg-{{ mission.statusBadgeClass }} text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ mission.title }}</h5>
+                <span class="badge bg-light text-dark">
+                    {{ mission.dangerLevelStars }}
+                </span>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ mission.description|slice(0, 150) }}{% if mission.description|length > 150 %}...{% endif %}</p>
+            <div class="mb-2">
+                <span class="badge bg-{{ mission.statusBadgeClass }}">
+                    {{ mission.statusLabel }}
+                </span>
+            </div>
+            <div class="mb-2">
+                <small class="text-muted">
+                    <i class="fas fa-map-marker-alt"></i> {{ mission.location }}
+                </small>
+            </div>
+            <div class="mb-2">
+                <small class="text-muted">
+                    <i class="fas fa-calendar"></i> {{ mission.startAt|date('d/m/Y à H:i') }}
+                </small>
+            </div>
+            {% if mission.assignedTeam %}
+                <div class="mb-2">
+                    <small class="text-muted">
+                        <i class="fas fa-users"></i> Équipe: 
+                        <a href="{{ path('app_team_show', {'id': mission.assignedTeam.id}) }}" class="text-decoration-none">
+                            {{ mission.assignedTeam.name }}
+                        </a>
+                    </small>
+                </div>
+            {% endif %}
+        </div>
+        {% if show_actions|default(true) %}
+            <div class="card-footer bg-transparent">
+                {{ include('components/_action_buttons.html.twig', {
+                    'show_url': path('app_mission_show', {'id': mission.id}),
+                    'edit_url': path('app_mission_edit', {'id': mission.id})
+                }) }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+

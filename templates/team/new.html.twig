@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Équipe - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ include('components/_page_header.html.twig', {
+        'title': 'Créer une nouvelle Équipe',
+        'subtitle': 'Formez une nouvelle équipe de super-héros',
+        'icon': 'fas fa-users',
+        'actions': [{'url': path('app_team_index'), 'label': 'Retour à la liste', 'icon': 'fas fa-arrow-left', 'class': 'btn-light'}]
+    }) }}
+
+    <div class="card">
+        <div class="card-body">
+            {{ include('team/_form.html.twig', {'button_label': 'Créer l\'équipe'}) }}
+        </div>
+    </div>
+{% endblock %}

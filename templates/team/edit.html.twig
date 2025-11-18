@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ team.name }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ include('components/_page_header.html.twig', {
+        'title': 'Modifier ' ~ team.name,
+        'subtitle': 'Modifiez les informations de cette équipe',
+        'icon': 'fas fa-edit',
+        'actions': [
+            {'url': path('app_team_show', {'id': team.id}), 'label': 'Voir', 'icon': 'fas fa-eye', 'class': 'btn-light'},
+            {'url': path('app_team_index'), 'label': 'Retour à la liste', 'icon': 'fas fa-arrow-left', 'class': 'btn-light'}
+        ]
+    }) }}
+
+    <div class="card">
+        <div class="card-body">
+            {{ include('team/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        {{ include('components/_danger_zone.html.twig', {
+            'message': 'La suppression d\'une équipe est irréversible.',
+            'delete_form': 'team/_delete_form.html.twig',
+            'delete_form_vars': {'team': team}
+        }) }}
+    </div>
+{% endblock %}
