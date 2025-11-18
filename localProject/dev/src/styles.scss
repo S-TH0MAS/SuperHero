@@ -1,0 +1,11 @@
+/**
+ * Fichier SCSS principal
+ * Importe les styles du projet Symfony
+ *
+ * Ce fichier importe dynamiquement les styles SCSS du projet Symfony parent
+ * pour éviter la duplication et garder les styles synchronisés.
+ */
+
+// Importer le fichier SCSS principal du projet Symfony
+// Le chemin est relatif depuis localProject/dev/src/
+@use '../../../assets/styles/app.scss';
